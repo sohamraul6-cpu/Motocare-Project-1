@@ -22,5 +22,42 @@ pipeline{
                 sh 'ls -la'
             }
         }
+
+        // step3: latest code from github 
+        stage('checkout'){
+
+            steps{
+                checkout scm
+                echo 'code downloaded from github'
+            }
+        }
+
+        // step4: validation 
+        stage('validate code'){
+            steps{
+                sh 'ls -la'
+                sh 'test -f index.html'
+                sh 'test -f Dockerfile'
+                echo 'validation successful'
+            }
+        }
+
+        // step5: docker image build 
+        stage('docker image build'){
+            steps{
+                sh 'docker build -t motocare:latest .'
+                echo 'docker image created'
+            }
+        }
+
+        // step6: running docker container
+        stage('deployment'){
+            steps{
+                sh 'docker rm -f motocare || true'
+                sh 'docker run -d --name motocare --restart unless-stopped -p 8080:80 motocare:latest'
+                echo 'website deployment successful'
+
+            }
+        }
     }
 }
