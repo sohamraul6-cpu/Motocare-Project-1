@@ -54,7 +54,7 @@ pipeline{
         stage('deployment'){
             steps{
                 sh 'docker rm -f motocare || true'
-                sh 'docker run -d --name motocare --restart unless-stopped -p 8080:80 motocare:latest'
+                sh 'docker run -d --name motocare --restart unless-stopped -p 80:80 motocare:latest'
                 echo 'website deployment successful'
 
             }
